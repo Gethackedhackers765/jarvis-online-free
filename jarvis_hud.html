@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>STARK INTERFACE // BYPASS CORE v26.0</title>
+    <title>STARK INTERFACE // SERVER CORE v27.0</title>
     <style>
         body { 
             background-color: #020813; 
@@ -41,20 +41,20 @@
 </head>
 <body>
     <div class="hud-banner">
-        <div>STARK_CORE // LOCAL_BYPASS_MATRIX // v26.0</div>
-        <div style="color: #00ff66;">NEURAL_ROUTING: SCRIPT_INJECTION_OVERRIDE</div>
+        <div>STARK_CORE // CLOUD_SERVER_MATRIX // v27.0</div>
+        <div style="color: #00ff66;">HOST_STATUS: SECURE PUBLIC SERVER ACTIVE</div>
         <div class="clock" id="chrono">SYS_TIME: --:--:--</div>
     </div>
     <div class="hud-container">
         <div class="hud-widget-side"><div class="arc-reactor-ring"></div></div>
         <div class="hud-main-side">
             <div class="terminal-output" id="terminalLog">
-                <span style="color: #00a8cc;">[OK] SCRIPT TAG SECURITY BYPASS ACTIVE.</span><br>
-                <span style="color: #00e5ff; font-weight: bold;">[JARVIS]: Browser local security sandboxes successfully dismantled, Sir. Type any query or historical check below and press Enter.</span><br>
+                <span style="color: #00a8cc;">[OK] SERVER NODE ESTABLISHED SUCCESSFULLY.</span><br>
+                <span style="color: #00e5ff; font-weight: bold;">[JARVIS]: Cloud architecture verified, Sir. Browser desktop firewalls are non-existent here. Type any inquiry below and hit Enter.</span><br>
             </div>
             <div class="input-bar">
                 <div style="color: #00e5ff; font-weight: bold; font-family: monospace;">JARVIS &gt;</div>
-                <input type="text" class="main-input" id="cmdInput" placeholder="ASK JARVIS ANYTHING AT ALL..." autofocus autocomplete="off">
+                <input type="text" class="main-input" id="cmdInput" placeholder="ENTER CLOUD OVERLINK DIRECTIVE..." autofocus autocomplete="off">
                 <button class="send-btn" onclick="executeDirective()">SEND</button>
             </div>
         </div>
@@ -69,52 +69,30 @@
             }
         }
 
-        // Global callback handler that receives the data injected securely from the web
-        window.handleJarvisResponse = function(data) {
+        async function queryAI(userPrompt) {
             const log = document.getElementById('terminalLog');
-            
-            // Remove the temporary injection script tag cleanly
-            const oldScript = document.getElementById('jarvisTmpScript');
-            if (oldScript) oldScript.remove();
+            log.innerHTML += `<br><span style="color: #00a8cc;">[THINKING] Processing network transmission nodes...</span>`;
+            log.scrollTop = log.scrollHeight;
 
-            if (data && data.AbstractText) {
-                let aiResponse = data.AbstractText;
+            const systemContext = "You are JARVIS, the legendary AI companion engineered by Tony Stark from Iron Man. Keep replies punchy, highly analytical, and always call the user Sir.";
+            const targetUrl = `https://pollinations.ai{encodeURIComponent(systemContext + " User prompt: " + userPrompt)}`;
+            
+            try {
+                // Running from a server means the browser cleanly passes fetch requests without CORS blocking
+                const response = await fetch(targetUrl);
+                if (!response.ok) throw new Error("Link latency failure.");
+                let aiResponse = await response.text();
+                
+                aiResponse = aiResponse.replace(/\*/g, '');
+
                 log.innerHTML += `<br><span style="color: #00e5ff; font-weight: bold;">[JARVIS]: ${aiResponse}</span>`;
                 jarvisSpeak(aiResponse);
-            } else if (data && data.RelatedTopics && data.RelatedTopics.length > 0) {
-                let aiResponse = data.RelatedTopics[0].Text;
-                log.innerHTML += `<br><span style="color: #00e5ff; font-weight: bold;">[JARVIS]: ${aiResponse}</span>`;
-                jarvisSpeak(aiResponse);
-            } else {
-                let fallback = "My external knowledge mainframe returned a blank record, Sir. Try expanding the query phrasing.";
-                log.innerHTML += `<br><span style="color: #ff5555;">[JARVIS]: ${fallback}</span>`;
-                jarvisSpeak(fallback);
+
+            } catch (error) {
+                log.innerHTML += `<br><span style="color: #ff5555;">[CRITICAL ERROR]: Frame delivery fault. Endpoint unreadable.</span>`;
+                jarvisSpeak("Server transmission broken, Sir.");
             }
             log.scrollTop = log.scrollHeight;
-        };
-
-        // Bypasses browser cross-origin locks by dynamically injecting a trusted web script module
-        function queryAI(userPrompt) {
-            const log = document.getElementById('terminalLog');
-            log.innerHTML += `<br><span style="color: #00a8cc;">[THINKING] Injecting script bypass nodes for "${userPrompt}"...</span>`;
-            log.scrollTop = log.scrollHeight;
-
-            // Using open API framework formatted specifically to pass through script wrappers safely
-            const targetUrl = `https://duckduckgo.com{encodeURIComponent(userPrompt)}&format=json&callback=handleJarvisResponse`;
-            
-            // Generate a script tag on the fly—the browser allows this implicitly from local file roots
-            const script = document.createElement('script');
-            script.id = 'jarvisTmpScript';
-            script.src = targetUrl;
-            
-            // Error catch block if the query completely drops out
-            script.onerror = function() {
-                log.innerHTML += `<br><span style="color: #ff5555;">[CRITICAL ERROR]: Mainframe infrastructure timeout.</span>`;
-                jarvisSpeak("Bypass framework dropped, Sir.");
-                log.scrollTop = log.scrollHeight;
-            };
-
-            document.body.appendChild(script);
         }
 
         function executeDirective() {
@@ -127,7 +105,7 @@
             input.value = "";
 
             if (val.toLowerCase() === 'clear') {
-                log.innerHTML = `<span style="color:#00e5ff; font-weight:bold;">[JARVIS]: Core logging files wiped clean, Sir.</span><br>`;
+                log.innerHTML = `<span style="color:#00e5ff; font-weight:bold;">[JARVIS]: Terminal memory cells wiped, Sir.</span><br>`;
                 jarvisSpeak("Logs cleared.");
             } else {
                 queryAI(val);
